@@ -1,6 +1,6 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify
 from models import Customer, Goods, Sales
-from database import db
+from extensions import db, limiter
 
 # Define the blueprint
 sales_bp = Blueprint('sales_bp', __name__)
@@ -9,7 +9,8 @@ sales_bp = Blueprint('sales_bp', __name__)
 # Service 3 - Sales Endpoints
 # ===============================
 
-# 1. Display available goods
+# Apply rate limit to the "Display Goods" route
+@limiter.limit("10 per minute")  # Allow 10 requests per minute
 @sales_bp.route('/goods', methods=['GET'])
 def display_goods():
     goods = Goods.query.all()
@@ -17,7 +18,6 @@ def display_goods():
         {'name': good.name, 'price': good.price, 'quantity': good.quantity}
         for good in goods if good.quantity > 0
     ]), 200
-
 
 # 2. Get goods details
 @sales_bp.route('/goods/<good_name>', methods=['GET'])
@@ -92,3 +92,4 @@ def purchase_history(username):
         }
         for sale in sales
     ]), 200
+    
