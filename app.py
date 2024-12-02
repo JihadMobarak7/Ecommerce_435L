@@ -1,19 +1,23 @@
 from flask import Flask
-from flask_migrate import Migrate  # Import Flask-Migrate
+from flask_migrate import Migrate
 from database import db
-from routes import customer_api
+from routes.customers import customer_bp
+from routes.inventory import inventory_bp
+from routes.sales import sales_bp
+from routes.review import review_bp
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///customers.db'  # Or your database of choice
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
-
-# Initialize Flask-Migrate
 migrate = Migrate(app, db)
 
-# Register the blueprint for customer routes
-app.register_blueprint(customer_api, url_prefix='/api/customers')
+# Register blueprints
+app.register_blueprint(customer_bp, url_prefix='/api/customers')
+app.register_blueprint(inventory_bp, url_prefix='/api/inventory')
+app.register_blueprint(sales_bp, url_prefix='/api/sales')
+app.register_blueprint(review_bp, url_prefix='/api/reviews')
 
 if __name__ == "__main__":
     app.run(debug=True)

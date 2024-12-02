@@ -1,19 +1,25 @@
 from flask import Blueprint, request, jsonify
-from db import db
-from inventoryitems import InventoryItem
+from models import InventoryItem
+from database import db
 
-inventory_bp = Blueprint('inventory', __name__, url_prefix='/inventory')
+inventory_bp = Blueprint('inventory_bp', __name__)
 
+# Add goods
 @inventory_bp.route('/', methods=['POST'])
 def add_goods():
     data = request.get_json()
-    new_item = InventoryItem(name=data['name'], category=data['category'],
-                             price_per_item=data['pricePerItem'], description=data['description'],
-                             count_in_stock=data['countInStock'])
+    new_item = InventoryItem(
+        name=data['name'],
+        category=data['category'],
+        price_per_item=data['pricePerItem'],
+        description=data['description'],
+        count_in_stock=data['countInStock']
+    )
     db.session.add(new_item)
     db.session.commit()
-    return jsonify(new_item), 201
+    return jsonify({'id': new_item.id, 'name': new_item.name}), 201
 
+# Deduct goods
 @inventory_bp.route('/deduct', methods=['POST'])
 def deduct_goods():
     data = request.get_json()
@@ -21,10 +27,13 @@ def deduct_goods():
     if item and item.count_in_stock >= data['quantity']:
         item.count_in_stock -= data['quantity']
         db.session.commit()
-        return jsonify(item), 200
+        return jsonify({'id': item.id, 'count_in_stock': item.count_in_stock}), 200
+    elif not item:
+        return jsonify({'error': 'Item not found'}), 404
     else:
-        return jsonify({'error': 'Not enough stock or item not found'}), 400
+        return jsonify({'error': 'Not enough stock'}), 400
 
+# Update goods
 @inventory_bp.route('/<int:item_id>', methods=['PUT'])
 def update_goods(item_id):
     data = request.get_json()
@@ -36,6 +45,6 @@ def update_goods(item_id):
         item.description = data.get('description', item.description)
         item.count_in_stock = data.get('countInStock', item.count_in_stock)
         db.session.commit()
-        return jsonify(item), 200
+        return jsonify({'id': item.id, 'name': item.name}), 200
     else:
         return jsonify({'error': 'Item not found'}), 404
