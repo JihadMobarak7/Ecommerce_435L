@@ -2,15 +2,18 @@
 require('./config/db');
 
 const express = require('express');
-const inventoryRoutes = require('./inventory/routes/inventoryRoutes'); // Adjust the path as necessary
+const mongoose = require('mongoose');
+const inventoryRoutes = require('./inventory/routes/inventoryRoutes');
 
 const app = express();
-const port = 3000;
+app.use(express.json()); // for parsing application/json
+app.use('/inventory', inventoryRoutes);
 
-app.use(express.json()); // Middleware to parse JSON bodies
+mongoose.connect('your-mongodb-connection-string', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.log(err));
 
-app.use('/inventory', inventoryRoutes); // Mount inventory routes
-
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
