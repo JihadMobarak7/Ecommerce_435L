@@ -1,6 +1,6 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_migrate import Migrate
-from extensions import db, limiter  # Import from extensions
+from extensions import db, limiter,logger  # Import from extensions
 from routes.customers import customer_bp
 from routes.inventory import inventory_bp
 from routes.sales import sales_bp
@@ -30,5 +30,13 @@ def global_health_check():
     """Check if the Flask app is running."""
     return {"status": "ok", "message": "App is running"}, 200
 
+@app.before_request
+def log_request_info():
+    logger.info(f"Request: {request.method} {request.url} - Data: {request.get_json()}")
+
+@app.after_request
+def log_response_info(response):
+    logger.info(f"Response: {response.status} - Data: {response.get_data(as_text=True)}")
+    return response
 if __name__ == "__main__":
     app.run(debug=True)
