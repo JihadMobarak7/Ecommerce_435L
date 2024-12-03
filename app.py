@@ -25,5 +25,10 @@ app.register_blueprint(inventory_bp, url_prefix='/api/inventory')
 app.register_blueprint(sales_bp, url_prefix='/api/sales')
 app.register_blueprint(review_bp, url_prefix='/api/reviews')
 
+@app.route('/health', methods=['GET'])
+def global_health_check():
+    """Check if the Flask app is running."""
+    return {"status": "ok", "message": "App is running"}, 200
+
 if __name__ == "__main__":
     app.run(debug=True)

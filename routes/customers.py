@@ -98,3 +98,13 @@ def deduct_wallet(username):
     customer.wallet_balance -= amount
     db.session.commit()
     return jsonify({'message': f'{amount} deducted from wallet', 'new_balance': customer.wallet_balance}), 200
+
+@customer_bp.route('/health', methods=['GET'])
+def customer_health_check():
+    """Check if the Customer Service is healthy."""
+    try:
+        # Example: Check database connectivity
+        db.session.execute('SELECT 1')
+        return {"status": "ok", "service": "Customer Service"}, 200
+    except Exception as e:
+        return {"status": "error", "message": str(e)}, 500

@@ -90,3 +90,13 @@ def get_user_reviews(user_id):
             'comment': review.comment
         } for review in reviews
     ]), 200
+    
+@review_bp.route('/health', methods=['GET'])
+def review_health_check():
+    """Check if the Review Service is healthy."""
+    try:
+        # Example: Check database connectivity
+        db.session.execute('SELECT 1')
+        return {"status": "ok", "service": "Review Service"}, 200
+    except Exception as e:
+        return {"status": "error", "message": str(e)}, 500

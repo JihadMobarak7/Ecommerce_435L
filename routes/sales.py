@@ -1,6 +1,7 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, request, jsonify
 from models import Customer, Goods, Sales
 from extensions import db, limiter
+from messaging import publish_message  
 
 # Define the blueprint
 sales_bp = Blueprint('sales_bp', __name__)
@@ -34,6 +35,7 @@ def get_good_details(good_name):
 
 
 # 3. Make a sale
+
 @sales_bp.route('/purchase', methods=['POST'])
 def make_sale():
     data = request.get_json()
@@ -59,21 +61,15 @@ def make_sale():
     # Process Sale
     customer.wallet_balance -= total_price
     good.quantity -= quantity
-
-    # Log the sale
-    sale = Sales(
-        customer_id=customer.id,
-        good_id=good.id,
-        quantity=quantity,
-        total_price=total_price
-    )
+    sale = Sales(customer_id=customer.id, good_id=good.id, quantity=quantity, total_price=total_price)
     db.session.add(sale)
     db.session.commit()
 
-    return jsonify({
-        'message': 'Purchase successful',
-        'remaining_balance': customer.wallet_balance
-    }), 200
+    # Send a notification to RabbitMQ
+    message = f"Sale completed: {username} purchased {quantity} x {good_name} for ${total_price:.2f}"
+    publish_message(message)
+
+    return jsonify({'message': 'Purchase successful', 'remaining_balance': customer.wallet_balance}), 200
 
 
 # 4. Purchase history
@@ -92,4 +88,14 @@ def purchase_history(username):
         }
         for sale in sales
     ]), 200
+    
+@sales_bp.route('/health', methods=['GET'])
+def sales_health_check():
+    """Check if the Sales Service is healthy."""
+    try:
+        # Example: Check database connectivity
+        db.session.execute('SELECT 1')
+        return {"status": "ok", "service": "Sales Service"}, 200
+    except Exception as e:
+        return {"status": "error", "message": str(e)}, 500
     

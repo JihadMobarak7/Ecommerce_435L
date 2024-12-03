@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      replicas: 3  # Scale to 3 instances
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+    networks:
+      - app-network
+
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+  haproxy:
+    image: haproxy:latest
+    ports:
+      - "8080:80"  # Expose the load balancer on port 8080
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    depends_on:
+      - app
+    networks:
+      - app-network

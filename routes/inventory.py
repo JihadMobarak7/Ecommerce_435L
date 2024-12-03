@@ -48,3 +48,13 @@ def update_goods(item_id):
         return jsonify({'id': item.id, 'name': item.name}), 200
     else:
         return jsonify({'error': 'Item not found'}), 404
+    
+@inventory_bp.route('/health', methods=['GET'])
+def inventory_health_check():
+    """Check if the Inventory Service is healthy."""
+    try:
+        # Example: Check database connectivity
+        db.session.execute('SELECT 1')
+        return {"status": "ok", "service": "Inventory Service"}, 200
+    except Exception as e:
+        return {"status": "error", "message": str(e)}, 500
