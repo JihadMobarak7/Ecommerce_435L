@@ -1,4 +1,4 @@
-from messaging import consume_messages
+from app.messaging import consume_messages
 
 def handle_message(message):
     """Process the received message."""

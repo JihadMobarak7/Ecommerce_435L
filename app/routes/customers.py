@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
-from models import Customer
-from database import db
-
+from app.models import Customer 
+from app.extensions import db
+from sqlalchemy.sql import text 
 customer_bp = Blueprint('customer_bp', __name__)
 
 # Register a new customer
@@ -104,7 +104,7 @@ def customer_health_check():
     """Check if the Customer Service is healthy."""
     try:
         # Example: Check database connectivity
-        db.session.execute('SELECT 1')
+        db.session.execute(text('SELECT 1'))  # Explicitly wrap 'SELECT 1' with text()
         return {"status": "ok", "service": "Customer Service"}, 200
     except Exception as e:
         return {"status": "error", "message": str(e)}, 500

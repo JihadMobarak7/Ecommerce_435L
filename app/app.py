@@ -1,10 +1,13 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from flask import Flask, jsonify, request
 from flask_migrate import Migrate
-from extensions import db, limiter,logger  # Import from extensions
-from routes.customers import customer_bp
-from routes.inventory import inventory_bp
-from routes.sales import sales_bp
-from routes.review import review_bp
+from app.extensions import db, limiter, logger  # Updated import paths
+from app.routes.customers import customer_bp  # Updated import paths
+from app.routes.inventory import inventory_bp  # Updated import paths
+from app.routes.sales import sales_bp  # Updated import paths
+from app.routes.review import review_bp 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
@@ -38,5 +41,6 @@ def log_request_info():
 def log_response_info(response):
     logger.info(f"Response: {response.status} - Data: {response.get_data(as_text=True)}")
     return response
+    
 if __name__ == "__main__":
     app.run(debug=True)

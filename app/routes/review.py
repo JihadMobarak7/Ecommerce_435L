@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
-from database import db
-from models import Review
+from app.extensions import db
+from app.models import Review
+from sqlalchemy import text
 
 # Define blueprint
 review_bp = Blueprint('review_bp', __name__, url_prefix='/api/reviews')
@@ -93,10 +94,8 @@ def get_user_reviews(user_id):
     
 @review_bp.route('/health', methods=['GET'])
 def review_health_check():
-    """Check if the Review Service is healthy."""
     try:
-        # Example: Check database connectivity
-        db.session.execute('SELECT 1')
+        db.session.execute(text('SELECT 1'))
         return {"status": "ok", "service": "Review Service"}, 200
     except Exception as e:
         return {"status": "error", "message": str(e)}, 500

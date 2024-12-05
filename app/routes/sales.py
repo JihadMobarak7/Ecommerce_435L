@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify
-from models import Customer, Goods, Sales
-from extensions import db, limiter
-from messaging import publish_message  
+from app.models import Customer, Goods, Sales
+from app.extensions import db, limiter
+from app.messaging import publish_message  
+from sqlalchemy.sql import text
 
 # Define the blueprint
 sales_bp = Blueprint('sales_bp', __name__)
@@ -89,12 +90,13 @@ def purchase_history(username):
         for sale in sales
     ]), 200
     
+
 @sales_bp.route('/health', methods=['GET'])
 def sales_health_check():
     """Check if the Sales Service is healthy."""
     try:
-        # Example: Check database connectivity
-        db.session.execute('SELECT 1')
+        # Explicitly declare the textual SQL using text
+        db.session.execute(text('SELECT 1'))
         return {"status": "ok", "service": "Sales Service"}, 200
     except Exception as e:
         return {"status": "error", "message": str(e)}, 500

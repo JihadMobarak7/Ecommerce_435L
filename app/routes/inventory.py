@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
-from models import InventoryItem
-from database import db
+from app.models import InventoryItem
+from app.extensions import db
+from sqlalchemy import text
 
 inventory_bp = Blueprint('inventory_bp', __name__)
 
@@ -53,8 +54,8 @@ def update_goods(item_id):
 def inventory_health_check():
     """Check if the Inventory Service is healthy."""
     try:
-        # Example: Check database connectivity
-        db.session.execute('SELECT 1')
+        # Use SQLAlchemy's text function for the query
+        db.session.execute(text('SELECT 1'))
         return {"status": "ok", "service": "Inventory Service"}, 200
     except Exception as e:
         return {"status": "error", "message": str(e)}, 500
