@@ -569,3 +569,131 @@ WHERE customer.username = ?
  * Running on http://127.0.0.1:5000
 2024-12-05 14:48:09,366 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
 2024-12-05 14:48:11,750 - werkzeug - INFO - 127.0.0.1 - - [05/Dec/2024 14:48:11] "GET /api/review/health HTTP/1.1" 200 -
+2024-12-05 14:58:45,625 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-12-05 14:58:45,626 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-05 15:14:49,604 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-12-05 15:14:49,606 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-05 15:14:51,991 - app - ERROR - Exception on /api/review/product/1 [GET]
+Traceback (most recent call last):
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: review
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/app/routes/review.py", line 72, in get_product_reviews
+    reviews = Review.query.filter_by(product_id=product_id).all()
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/orm/query.py", line 2673, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/orm/query.py", line 2827, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 2362, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/orm/session.py", line 2247, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/orm/context.py", line 305, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/jihadmobarak/Desktop/Ecommerce_435L/venv/lib/python3.13/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: review
+[SQL: SELECT review.id AS review_id, review.product_id AS review_product_id, review.user_id AS review_user_id, review.rating AS review_rating, review.comment AS review_comment, review.created_at AS review_created_at, review.updated_at AS review_updated_at 
+FROM review 
+WHERE review.product_id = ?]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-12-05 15:14:52,002 - werkzeug - INFO - 127.0.0.1 - - [05/Dec/2024 15:14:52] "[35m[1mGET /api/review/product/1 HTTP/1.1[0m" 500 -
+2024-12-05 15:18:06,267 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-12-05 15:18:06,267 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-06 15:08:40,967 - flask_migrate - ERROR - Error: Directory migrations already exists and is not empty

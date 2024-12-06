@@ -2,7 +2,20 @@ from flask import Blueprint, request, jsonify
 from app.models import Customer 
 from app.extensions import db
 from sqlalchemy.sql import text 
+from flask_jwt_extended import create_access_token
+from werkzeug.security import check_password_hash
 customer_bp = Blueprint('customer_bp', __name__)
+
+# login using JWT
+@customer_bp.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    customer = Customer.query.filter_by(username=data.get('username')).first()
+    if not customer or not check_password_hash(customer.password, data.get('password')):
+        return jsonify({'error': 'Invalid username or password'}), 401
+
+    access_token = create_access_token(identity=customer.id)
+    return jsonify({'access_token': access_token}), 200
 
 # Register a new customer
 @customer_bp.route('/register', methods=['POST'])

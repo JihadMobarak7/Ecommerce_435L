@@ -37,10 +37,16 @@ class InventoryItem(db.Model):
     count_in_stock = db.Column(db.Integer, nullable=False)
 
 class Review(db.Model):
+    __tablename__ = 'review'
     id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, nullable=False)  
-    user_id = db.Column(db.Integer, nullable=False)  
-    rating = db.Column(db.Integer, nullable=False)  
-    comment = db.Column(db.Text, nullable=True)
+    product_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Float, nullable=False)
+    comment = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    
+class Product(db.Model):
+    __tablename__ = 'product'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)

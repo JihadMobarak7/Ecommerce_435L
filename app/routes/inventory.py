@@ -38,7 +38,7 @@ def deduct_goods():
 @inventory_bp.route('/<int:item_id>', methods=['PUT'])
 def update_goods(item_id):
     data = request.get_json()
-    item = InventoryItem.query.get(item_id)
+    item = db.session.get(InventoryItem, item_id)
     if item:
         item.name = data.get('name', item.name)
         item.category = data.get('category', item.category)
